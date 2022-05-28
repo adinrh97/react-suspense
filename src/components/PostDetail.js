@@ -1,10 +1,7 @@
 import React from "react";
-import fetcher from "../helper/fetcher";
 
-const resource = fetcher("https://jsonplaceholder.typicode.com/posts/1");
-
-const PostDetail = () => {
-  const postDetails = resource.read();
+const PostDetail = ({resource}) => {
+  const postDetails = resource.posts.read();
 
   return (
     <div>
