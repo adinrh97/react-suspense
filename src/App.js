@@ -1,11 +1,8 @@
 import { Suspense, useState } from "react";
+import ErrorBoundary from "./components/ErrorBoundary";
 import PostDetail from "./components/PostDetail";
 import UserList from "./components/UserList";
 import fetcher from "./helper/fetcher";
-
-function getNextId(id) {
-  return id + 1;
-}
 
 export function fetchData(id) {
   let userPromise = fetcher("https://jsonplaceholder.typicode.com/users");
@@ -26,23 +23,26 @@ const App = () => {
 
   return (
     <div className="app">
-      <h2>React Suspense Data Fetching</h2>
-      <button
-        onClick={() => {
-          const nextId = getNextId(resource.id);
-          setResource(
-            fetchData(nextId)
-          );
-        }}
-      >
-        Next
-      </button> 
-      <Suspense fallback={<p>Loading post</p>}>
-        <PostDetail resource={resource} />
-      </Suspense>
-      <Suspense fallback={<p>Loading user list</p>}>
-        <UserList resource={resource} />
-      </Suspense>
+        <h2>React Suspense Data Fetching</h2>
+        <button
+          onClick={() => {
+            setResource(
+              fetchData(0)
+            );
+          }}
+        >
+          Next
+        </button> 
+        <ErrorBoundary
+          fallback={<h2>Could not fetch posts.</h2>}
+        >
+          <Suspense fallback={<p>Loading post</p>}>
+            <PostDetail resource={resource} />
+          </Suspense>
+        </ErrorBoundary>
+        <Suspense fallback={<p>Loading user list</p>}>
+          <UserList resource={resource} />
+        </Suspense>
     </div>
   );
 };
